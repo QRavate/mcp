@@ -1,0 +1,59 @@
+name: Publish to the MCP Registry
+
+# Publishes server.json to the official MCP Registry on every version tag (e.g. 2.0.0).
+# The tag must match "version" in server.json, which must match the version the server reports.
+#
+# Authentication: the name com.qravate/* is proven by a DNS TXT record on qravate.com
+# ("v=MCPv1; k=ed25519; p=<public key>"). The private key (hex) is the MCP_PRIVATE_KEY secret
+# of the "mcp-registry-publish" environment, restricted to version tags. See README.md.
+on:
+  push:
+    tags:
+      - '*.*.*'
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment: mcp-registry-publish
+    env:
+      MCP_PUBLISHER_VERSION: v1.8.1
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run validate
+
+      - name: Check that the tag matches server.json
+        run: test "$(jq -r .version server.json)" = "${GITHUB_REF_NAME}"
+
+      - name: Install cosign
+        uses: sigstore/cosign-installer@6f9f17788090df1f26f669e9d70d6ae9567deba6 # v4.1.2
+
+      - name: Download and verify mcp-publisher
+        run: |
+          set -euo pipefail
+          archive="mcp-publisher_linux_amd64.tar.gz"
+          base_url="https://github.com/modelcontextprotocol/registry/releases/download/${MCP_PUBLISHER_VERSION}"
+          curl --fail --location --silent --show-error --output "$archive" "$base_url/$archive"
+          curl --fail --location --silent --show-error --output "$archive.sigstore.json" "$base_url/$archive.sigstore.json"
+          cosign verify-blob \
+            --bundle "$archive.sigstore.json" \
+            --certificate-identity "https://github.com/modelcontextprotocol/registry/.github/workflows/release.yml@refs/tags/${MCP_PUBLISHER_VERSION}" \
+            --certificate-oidc-issuer "https://token.actions.githubusercontent.com" \
+            "$archive"
+          tar xzf "$archive" mcp-publisher
+          rm -f "$archive" "$archive.sigstore.json"
+
+      - name: Authenticate to the MCP Registry
+        env:
+          MCP_PRIVATE_KEY: ${{ secrets.MCP_PRIVATE_KEY }}
+        run: ./mcp-publisher login dns --domain qravate.com
+
+      - name: Publish
+        run: ./mcp-publisher publish

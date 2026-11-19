@@ -1,0 +1,16 @@
+{
+	"name": "qravate-mcp",
+	"version": "0.0.0",
+	"private": true,
+	"description": "Listing of the QRavate remote MCP server in the official MCP Registry.",
+	"license": "MIT",
+	"type": "module",
+	"scripts": {
+		"validate": "node scripts/validate.mjs",
+		"check-server": "node scripts/check-server.mjs"
+	},
+	"devDependencies": {
+		"ajv": "^8.17.1",
+		"ajv-formats": "^3.0.1"
+	}
+}

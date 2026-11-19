@@ -1,0 +1,32 @@
+name: Live server check
+
+# Checks every week that https://www.qravate.com/mcp still answers what MCP clients expect
+# (401 with OAuth metadata, dynamic client registration, PKCE). Opens an issue if it does not.
+on:
+  schedule:
+    - cron: '23 6 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+      - run: npm run check-server
+      - name: Open an issue on failure
+        if: failure() && github.event_name == 'schedule'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh issue list --label server-check --state open --json number --jq '.[0].number' | grep -q . && exit 0
+          gh label create server-check --color B60205 --force
+          gh issue create --label server-check \
+            --title "Weekly MCP server check failed" \
+            --body "https://www.qravate.com/mcp no longer answers what MCP clients expect: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
