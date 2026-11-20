@@ -53,7 +53,8 @@ jobs:
       - name: Authenticate to the MCP Registry
         env:
           MCP_PRIVATE_KEY: ${{ secrets.MCP_PRIVATE_KEY }}
-        run: ./mcp-publisher login dns --domain qravate.com
+        # mcp-publisher reads the key from --private-key only, not from the environment.
+        run: ./mcp-publisher login dns --domain qravate.com --private-key "$MCP_PRIVATE_KEY"
 
       - name: Publish
         run: ./mcp-publisher publish
