@@ -4,6 +4,7 @@ Versions follow the version reported by the QRavate MCP server.
 
 ## 2.2.0
 
+- `get_stats` and `compare_stats` show a stats dashboard in the conversation (MCP Apps and ChatGPT Apps): the same report as the Statistics page of the QRavate web app, with the same features per plan. The chart is sent in `_meta`; the assistant keeps the figures as text.
 - Every tool requires a QRavate account, static QR codes and design options included. Connecting the server and listing its tools still work without one: the assistant asks you to sign in at the first tool call.
 
 ## 2.1.0

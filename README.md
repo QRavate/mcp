@@ -73,8 +73,8 @@ The first time the assistant calls a QRavate tool, it opens a QRavate sign-in pa
 | `set_redirect_rules` | Sends scanners to different destinations by device, system, language, country, day, time or date, with A/B tests |
 | `schedule_destination_change` | Schedules a destination change at a given date |
 | `set_gs1_product` | Links a product (GTIN) to a QR code, following GS1 Digital Link |
-| `get_stats` | Scans over a period: per day, country, device |
-| `compare_stats` | Compares the scans of several QR codes, e.g. one per shop |
+| `get_stats` | Scans over a period: per day, country, device; shown as a stats dashboard where the assistant supports it |
+| `compare_stats` | Compares the scans of several QR codes, e.g. one per shop, with overlaid daily curves |
 | `export_qr_codes` | CSV export of QR codes, destinations and scans |
 
 Every tool needs sign-in. Tools that only read are marked as read-only for the assistant, and tools that replace what a printed code shows (destination, design, rules, schedule, pause, GS1) as destructive, so the assistant asks before running them. Some tools depend on the QRavate plan, and the number of actions per day depends on the plan too: the assistant says so when a tool is not included, with a link to the plans.
