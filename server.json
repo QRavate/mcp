@@ -3,7 +3,7 @@
 	"name": "com.qravate/qr-codes",
 	"title": "QRavate QR codes",
 	"description": "Manage your QRavate dynamic QR codes: create, edit destinations and designs, read scan stats.",
-	"version": "2.0.0",
+	"version": "2.3.0",
 	"websiteUrl": "https://www.qravate.com/ai",
 	"icons": [
 		{ "src": "https://www.qravate.com/assets/logo.png", "mimeType": "image/png", "sizes": ["512x512"] },

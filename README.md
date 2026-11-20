@@ -9,7 +9,7 @@ Create and manage [QRavate](https://www.qravate.com) dynamic QR codes from Claud
 https://www.qravate.com/mcp
 ```
 
-It is a **remote server**: nothing to install or host. You sign in to your QRavate account when you connect it (OAuth 2.1), and the assistant only acts on the workspace you choose.
+It is a **remote server**: nothing to install or host. Every tool works with your QRavate account: the assistant asks you to sign in (OAuth 2.1) the first time it calls one, and only acts on the workspace you choose.
 
 This repository holds the server's listing in the [official MCP Registry](https://registry.modelcontextprotocol.io) (`server.json`, as `com.qravate/qr-codes`) and the setup guides. The server itself runs on QRavate's infrastructure.
 
@@ -55,7 +55,7 @@ This repository holds the server's listing in the [official MCP Registry](https:
 }
 ```
 
-The first time the assistant uses QRavate, it opens a QRavate sign-in page. You can disconnect an assistant at any time from your QRavate account.
+The first time the assistant calls a QRavate tool, it opens a QRavate sign-in page. New accounts confirm their email address with a 6-digit code on that page, then go straight back to the conversation. You can disconnect an assistant at any time from your QRavate account.
 
 ## Tools
 
@@ -68,20 +68,21 @@ The first time the assistant uses QRavate, it opens a QRavate sign-in page. You 
 | `list_qr_codes` | Lists the workspace's QR codes, with search by name or destination |
 | `get_qr_code` | Details of a QR code, with its image (preview, PNG and SVG downloads) |
 | `update_destination` | Changes where a QR code points. The printed code stays valid. |
+| `rename_qr_code` | Renames a QR code. The printed code and its destination stay the same. |
 | `update_qr_design` | Changes the look of a QR code (style, colours, icon or logo, label) |
 | `set_qr_state` | Pauses or resumes a QR code |
 | `set_redirect_rules` | Sends scanners to different destinations by device, system, language, country, day, time or date, with A/B tests |
 | `schedule_destination_change` | Schedules a destination change at a given date |
 | `set_gs1_product` | Links a product (GTIN) to a QR code, following GS1 Digital Link |
-| `get_stats` | Scans over a period: per day, country, device |
-| `compare_stats` | Compares the scans of several QR codes, e.g. one per shop |
+| `get_stats` | Scans over a period: per day, country, device; shown as a stats dashboard where the assistant supports it |
+| `compare_stats` | Compares the scans of several QR codes, e.g. one per shop, with overlaid daily curves |
 | `export_qr_codes` | CSV export of QR codes, destinations and scans |
 
-Tools that only read are marked as read-only for the assistant. Some tools depend on the QRavate plan, and the number of actions per day depends on the plan too: the assistant says so when a tool is not included, with a link to the plans.
+Every tool needs sign-in. Tools that only read are marked as read-only for the assistant, and tools that replace what a printed code shows (destination, design, rules, schedule, pause, GS1) as destructive, so the assistant asks before running them. Some tools depend on the QRavate plan, and the number of actions per day depends on the plan too: the assistant says so when a tool is not included, with a link to the plans.
 
 ## Security and privacy
 
-- Sign-in uses OAuth 2.1 with PKCE and dynamic client registration. The assistant never sees your password, and you can revoke its access from your QRavate account.
+- Sign-in uses OAuth 2.1 with PKCE, dynamic client registration or Client ID Metadata Documents, on demand, at the first tool call. The assistant never sees your password, and you can revoke its access from your QRavate account.
 - Permissions are split into reading (`qr:read`) and changing (`qr:write`) QR codes.
 - What QRavate does with your data: [privacy policy](https://www.qravate.com/legal/privacy).
 - Found a security problem? See the [security policy](https://github.com/QRavate/.github/blob/main/SECURITY.md).
@@ -91,7 +92,7 @@ Tools that only read are marked as read-only for the assistant. Some tools depen
 ```bash
 npm install
 npm run validate       # server.json against the official schema, icons online
-npm run check-server   # the live server: 401, OAuth metadata, registration, PKCE
+npm run check-server   # the live server: tool list without a token, 401 on tool calls, OAuth metadata, registration, PKCE
 ```
 
 `check-server` also runs every week and opens an issue if the live server stops answering what clients expect.
