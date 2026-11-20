@@ -2,6 +2,10 @@
 
 Versions follow the version reported by the QRavate MCP server.
 
+## 2.2.0
+
+- Every tool requires a QRavate account, static QR codes and design options included. Connecting the server and listing its tools still work without one: the assistant asks you to sign in at the first tool call.
+
 ## 2.1.0
 
 - On-demand sign-in: `list_design_options` and `create_static_qr_code` work without an account; the assistant asks you to sign in only when it calls an account tool (HTTP 401 for Claude, a tool error with `mcp/www_authenticate` for ChatGPT).

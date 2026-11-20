@@ -9,7 +9,7 @@ Create and manage [QRavate](https://www.qravate.com) dynamic QR codes from Claud
 https://www.qravate.com/mcp
 ```
 
-It is a **remote server**: nothing to install or host. Static QR codes and design options work without an account; the assistant asks you to sign in to QRavate (OAuth 2.1) the first time it needs your account, and only acts on the workspace you choose.
+It is a **remote server**: nothing to install or host. Every tool works with your QRavate account: the assistant asks you to sign in (OAuth 2.1) the first time it calls one, and only acts on the workspace you choose.
 
 This repository holds the server's listing in the [official MCP Registry](https://registry.modelcontextprotocol.io) (`server.json`, as `com.qravate/qr-codes`) and the setup guides. The server itself runs on QRavate's infrastructure.
 
@@ -55,7 +55,7 @@ This repository holds the server's listing in the [official MCP Registry](https:
 }
 ```
 
-The first time the assistant needs your account (to create a dynamic QR code, read stats…), it opens a QRavate sign-in page. New accounts confirm their email address with a 6-digit code on that page, then go straight back to the conversation. You can disconnect an assistant at any time from your QRavate account.
+The first time the assistant calls a QRavate tool, it opens a QRavate sign-in page. New accounts confirm their email address with a 6-digit code on that page, then go straight back to the conversation. You can disconnect an assistant at any time from your QRavate account.
 
 ## Tools
 
@@ -77,11 +77,11 @@ The first time the assistant needs your account (to create a dynamic QR code, re
 | `compare_stats` | Compares the scans of several QR codes, e.g. one per shop |
 | `export_qr_codes` | CSV export of QR codes, destinations and scans |
 
-`list_design_options` and `create_static_qr_code` work without an account; the other tools need sign-in. Tools that only read are marked as read-only for the assistant, and tools that replace what a printed code shows (destination, design, rules, schedule, pause, GS1) as destructive, so the assistant asks before running them. Some tools depend on the QRavate plan, and the number of actions per day depends on the plan too: the assistant says so when a tool is not included, with a link to the plans.
+Every tool needs sign-in. Tools that only read are marked as read-only for the assistant, and tools that replace what a printed code shows (destination, design, rules, schedule, pause, GS1) as destructive, so the assistant asks before running them. Some tools depend on the QRavate plan, and the number of actions per day depends on the plan too: the assistant says so when a tool is not included, with a link to the plans.
 
 ## Security and privacy
 
-- Sign-in uses OAuth 2.1 with PKCE, dynamic client registration or Client ID Metadata Documents, on demand: tools that need no account never ask for it. The assistant never sees your password, and you can revoke its access from your QRavate account.
+- Sign-in uses OAuth 2.1 with PKCE, dynamic client registration or Client ID Metadata Documents, on demand, at the first tool call. The assistant never sees your password, and you can revoke its access from your QRavate account.
 - Permissions are split into reading (`qr:read`) and changing (`qr:write`) QR codes.
 - What QRavate does with your data: [privacy policy](https://www.qravate.com/legal/privacy).
 - Found a security problem? See the [security policy](https://github.com/QRavate/.github/blob/main/SECURITY.md).
@@ -91,7 +91,7 @@ The first time the assistant needs your account (to create a dynamic QR code, re
 ```bash
 npm install
 npm run validate       # server.json against the official schema, icons online
-npm run check-server   # the live server: tools without a token, 401 on account tools, OAuth metadata, registration, PKCE
+npm run check-server   # the live server: tool list without a token, 401 on tool calls, OAuth metadata, registration, PKCE
 ```
 
 `check-server` also runs every week and opens an issue if the live server stops answering what clients expect.
