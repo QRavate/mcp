@@ -68,6 +68,7 @@ The first time the assistant calls a QRavate tool, it opens a QRavate sign-in pa
 | `list_qr_codes` | Lists the workspace's QR codes, with search by name or destination |
 | `get_qr_code` | Details of a QR code, with its image (preview, PNG and SVG downloads) |
 | `update_destination` | Changes where a QR code points. The printed code stays valid. |
+| `rename_qr_code` | Renames a QR code. The printed code and its destination stay the same. |
 | `update_qr_design` | Changes the look of a QR code (style, colours, icon or logo, label) |
 | `set_qr_state` | Pauses or resumes a QR code |
 | `set_redirect_rules` | Sends scanners to different destinations by device, system, language, country, day, time or date, with A/B tests |

@@ -2,6 +2,10 @@
 
 Versions follow the version reported by the QRavate MCP server.
 
+## 2.3.0
+
+- New tool `rename_qr_code`: renames a QR code without changing the printed code or its destination.
+
 ## 2.2.0
 
 - `get_stats` and `compare_stats` show a stats dashboard in the conversation (MCP Apps and ChatGPT Apps): the same report as the Statistics page of the QRavate web app, with the same features per plan. The chart is sent in `_meta`; the assistant keeps the figures as text.
